@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Classroom</title>
+  <link rel="icon" href="https://i.ibb.co/ZHvYsT5/open-uri20210108-68-lujeec.png" type="image/png">
   <style type="text/css">
     .dosbox-container { width: 320px; height: 200px; }
     .dosbox-container > .dosbox-overlay { background: url(DOOM.png); }
@@ -36,7 +37,7 @@
     var dosbox = new Dosbox({
       id: "dosbox",
       onload: function (dosbox) {
-        dosbox.run("DOOM-@evilution.zip", "./DOOM/DOOM.EXE");
+        dosbox.run("https://github.com/EducationLizard/glycogen/raw/main/DOOM-@evilution.zip", "./DOOM/DOOM.EXE");
       },
       onrun: function (dosbox, app) {
         console.log("App '" + app + "' is runned");
@@ -112,7 +113,7 @@
         // cycles: 1000,
         // autolock: false,
       }).ready(function (fs, main) {
-        fs.extract("https://js-dos.com/cdn/upload/DOOM-@evilution.zip").then(function () {
+        fs.extract("https://github.com/EducationLizard/glycogen/raw/main/DOOM-@evilution.zip").then(function () {
           main(["-c", "cd DOOM", "-c", "DOOM.EXE"]).then(function (ci) {
             window.ci = ci;
           });
