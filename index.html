@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Classroom</title>
+  <title>DOOM</title>
   <link rel="icon" href="https://i.ibb.co/ZHvYsT5/open-uri20210108-68-lujeec.png" type="image/png">
   <style type="text/css">
-    .dosbox-container { width: 320px; height: 200px; }
+    .dosbox-container { width: 100vw; height: 100vh; }
     .dosbox-container > .dosbox-overlay { background: url(DOOM.png); }
     canvas {
       width: 100%;
@@ -24,11 +24,11 @@
       padding-left: 50px;
     }
   </style>
-  <script src="DOS-API.js"></script>
+  <script src="https://github.com/EducationLizard/glycogen/raw/main/DOS-API.js"></script>
   <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
 </head>
 <body>
-  <div id="dosbox"></div>
+  <div id="dosbox" class="dosbox-container"></div>
   <br/>
   <button onclick="dosbox.requestFullscreen();">Make fullscreen</button><br/>
   <p><b>Controls:</b> Move: UP, DOWN, LEFT, RIGHT; Use: W; Fire: S; Speed on: SPACE; Strafe on: ALT; Strafe: A, D;</p>
