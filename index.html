@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Classroom</title>
+  <title>DOOM</title>
   <link rel="icon" href="https://i.ibb.co/ZHvYsT5/open-uri20210108-68-lujeec.png" type="image/png">
   <style type="text/css">
     .dosbox-container { width: 100vw; height: 100vh; }
@@ -14,7 +14,7 @@
       margin: auto;
       padding: 0;
     }
-    #controls-heading, #controls-list {
+    .dosbox-controls {
       padding-left: 50px;
     }
   </style>
@@ -22,10 +22,16 @@
   <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
 </head>
 <body>
-  <div id="dosbox" class="dosbox-container"></div>
-  <br/>
-  <button onclick="dosbox.requestFullscreen();">Make fullscreen</button><br/>
-  <p><b>Controls:</b> Move: UP, DOWN, LEFT, RIGHT; Use: W; Fire: S; Speed on: SPACE; Strafe on: ALT; Strafe: A, D;</p>
+  <main>
+    <section id="dosbox-section" class="dosbox-container">
+      <canvas id="jsdos"></canvas>
+      <div class="dosbox-controls">
+        <button onclick="dosbox.requestFullscreen();">Make fullscreen</button>
+        <br/>
+        <p><b>Controls:</b> Move: UP, DOWN, LEFT, RIGHT; Use: W; Fire: S; Speed on: SPACE; Strafe on: ALT; Strafe: A, D;</p>
+      </div>
+    </section>
+  </main>
 
   <script type="text/javascript">
     var dosbox = new Dosbox({
@@ -64,11 +70,17 @@
       dosboxContainer.setAttribute('id', 'jsdos');
       doomSection.appendChild(dosboxContainer);
 
-      // Create and append Fullscreen button
-      var doomFullscreenBtn = document.createElement('button');
-      doomFullscreenBtn.setAttribute('id', 'fullscreenBtn');
-      doomFullscreenBtn.setAttribute('onclick', 'ci.fullscreen()');
-      doomFullscreenBtn.innerText = 'Fullscreen';
+      var div1 = document.createElement('div');
+      div1.setAttribute('class', 'row no-gutters');
+      doomSection.appendChild(div1);
+
+      var div2 = document.createElement('div');
+      div2.setAttribute('class', 'col-md-7 left-fullwidth-block white-bg my-auto');
+      div1.appendChild(div2);
+
+      var div3 = document.createElement('div');
+      div3.setAttribute('class', 'content-center');
+      div2.appendChild(div3);
 
       // Create and append controls list
       var controls = ["Move: UP, DOWN, LEFT, RIGHT", "Use: W", "Fire: S", "Speed on: SPACE", "Strafe on: ALT", "Strafe: A, D"];
@@ -83,10 +95,16 @@
         controlsList.appendChild(item);
       }
 
+      // Create and append Fullscreen button
+      var doomFullscreenBtn = document.createElement('button');
+      doomFullscreenBtn.setAttribute('id', 'fullscreenBtn');
+      doomFullscreenBtn.setAttribute('onclick', 'ci.fullscreen()');
+      doomFullscreenBtn.innerText = 'Fullscreen';
+
       // Append elements to the doomSection
-      doomSection.appendChild(doomFullscreenBtn);
-      doomSection.appendChild(controlsHeading);
-      doomSection.appendChild(controlsList);
+      div3.appendChild(controlsHeading);
+      div3.appendChild(controlsList);
+      div3.appendChild(doomFullscreenBtn);
 
       // Inject section
       document.querySelector('body > main').prepend(doomSection);
