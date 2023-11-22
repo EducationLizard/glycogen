@@ -46,22 +46,24 @@
         <div id="color-sequence"></div>
         <div id="user-sequence"></div>
         <div id="color-container">
-            <div class="color-square" id="color1" onclick="userClick(1)"></div>
-            <div class="color-square" id="color2" onclick="userClick(2)"></div>
-            <div class="color-square" id="color3" onclick="userClick(3)"></div>
-            <div class="color-square" id="color4" onclick="userClick(4)"></div>
+            <div class="color-square" id="yellow" onclick="userClick('yellow')"></div>
+            <div class="color-square" id="green" onclick="userClick('green')"></div>
+            <div class="color-square" id="red" onclick="userClick('red')"></div>
+            <div class="color-square" id="blue" onclick="userClick('blue')"></div>
         </div>
     </div>
 
     <script>
-        const colors = ['color1', 'color2', 'color3', 'color4'];
+        const colors = ['yellow', 'green', 'red', 'blue'];
         let colorSequence = [];
         let userSequence = [];
-        let gameOver = false;
+        let gameOver = true;
+        let score = 0;
 
         function startGame() {
             document.getElementById('play-button').style.display = 'none';
             document.getElementById('game-over').innerHTML = '';
+            score = 0;
 
             colorSequence = [];
             userSequence = [];
@@ -101,15 +103,16 @@
             document.getElementById('user-sequence').innerHTML = 'Your Turn';
         }
 
-        function userClick(index) {
+        function userClick(color) {
             if (!gameOver) {
-                const selectedColor = colors[index - 1];
-                highlightColor(selectedColor);
-                userSequence.push(selectedColor);
+                highlightColor(color);
+                userSequence.push(color);
 
                 if (!checkUserSequence()) {
                     endGame();
                 } else if (userSequence.length === colorSequence.length) {
+                    score++;
+                    document.getElementById('user-sequence').innerHTML = `Score: ${score}`;
                     setTimeout(() => {
                         addColorToSequence();
                         playColorSequence();
@@ -128,7 +131,7 @@
         }
 
         function endGame() {
-            document.getElementById('game-over').innerHTML = 'Game Over! Try Again.';
+            document.getElementById('game-over').innerHTML = `Game Over! Your Score: ${score}`;
             document.getElementById('play-button').style.display = 'block';
             gameOver = true;
         }
