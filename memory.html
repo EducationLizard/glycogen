@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/TqgGrTp/Cropped-Image.png">
     <style>
         .game-container {
             text-align: center;
@@ -57,20 +58,22 @@
         const colors = ['yellow', 'green', 'red', 'blue'];
         let colorSequence = [];
         let userSequence = [];
-        let gameOver = true;
+        let gameInProgress = false;
         let score = 0;
 
         function startGame() {
-            document.getElementById('play-button').style.display = 'none';
-            document.getElementById('game-over').innerHTML = '';
-            score = 0;
+            if (!gameInProgress) {
+                document.getElementById('play-button').style.display = 'none';
+                document.getElementById('game-over').innerHTML = '';
+                score = 0;
 
-            colorSequence = [];
-            userSequence = [];
-            gameOver = false;
+                colorSequence = [];
+                userSequence = [];
+                gameInProgress = true;
 
-            addColorToSequence();
-            playColorSequence();
+                addColorToSequence();
+                playColorSequence();
+            }
         }
 
         function addColorToSequence() {
@@ -104,7 +107,7 @@
         }
 
         function userClick(color) {
-            if (!gameOver) {
+            if (gameInProgress) {
                 highlightColor(color);
                 userSequence.push(color);
 
@@ -133,7 +136,7 @@
         function endGame() {
             document.getElementById('game-over').innerHTML = `Game Over! Your Score: ${score}`;
             document.getElementById('play-button').style.display = 'block';
-            gameOver = true;
+            gameInProgress = false;
         }
     </script>
 </body>
