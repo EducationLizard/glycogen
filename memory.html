@@ -18,6 +18,7 @@
             cursor: pointer;
             border: 2px solid #333;
             display: inline-block;
+            transition: opacity 0.5s;
         }
 
         #play-button {
@@ -37,10 +38,10 @@
             color: #d9534f;
         }
     </style>
-    <title>Memory Game</title>
+    <title>Memory</title>
 </head>
 <body>
-    <h1>Memory Game</h1>
+    <h1>Memory</h1>
     <div class="game-container">
         <div id="play-button" onclick="startGame()">Start Game</div>
         <div id="game-over"></div>
@@ -84,7 +85,7 @@
         function playColorSequence() {
             let index = 0;
             const interval = setInterval(() => {
-                highlightColor(colorSequence[index]);
+                showColor(colorSequence[index]);
                 index++;
                 if (index >= colorSequence.length) {
                     clearInterval(interval);
@@ -93,7 +94,7 @@
             }, 1000);
         }
 
-        function highlightColor(color) {
+        function showColor(color) {
             const colorSquare = document.getElementById(color);
             colorSquare.style.opacity = '1';
             setTimeout(() => {
@@ -108,7 +109,7 @@
 
         function userClick(color) {
             if (gameInProgress) {
-                highlightColor(color);
+                showColor(color);
                 userSequence.push(color);
 
                 if (!checkUserSequence()) {
