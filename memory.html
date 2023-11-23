@@ -1,154 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/TqgGrTp/Cropped-Image.png">
-    <style>
-        .game-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .color-square {
-            width: 100px;
-            height: 100px;
-            margin: 10px;
-            cursor: pointer;
-            border: 2px solid #333;
-            display: inline-block;
-            transition: background-color 0.5s;
-        }
-
-        #play-button {
-            margin-top: 20px;
-            padding: 10px;
-            cursor: pointer;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        #game-over {
-            margin-top: 20px;
-            font-size: 24px;
-            color: #d9534f;
-        }
-    </style>
-    <title>Memory</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .game-container {
+      text-align: center;
+    }
+    .color-btn {
+      width: 100px;
+      height: 100px;
+      margin: 10px;
+      border: 2px solid #000;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h1>Memory</h1>
-    <div class="game-container">
-        <div id="play-button" onclick="startGame()">Start Game</div>
-        <div id="game-over"></div>
-        <div id="color-sequence"></div>
-        <div id="user-sequence"></div>
-        <div id="color-container">
-            <div class="color-square" id="yellow" onclick="userClick('yellow')"></div>
-            <div class="color-square" id="green" onclick="userClick('green')"></div>
-            <div class="color-square" id="red" onclick="userClick('red')"></div>
-            <div class="color-square" id="blue" onclick="userClick('blue')"></div>
-        </div>
-    </div>
 
-    <script>
-        const colors = ['#FFFF00', '#008000', '#FF0000', '#0000FF'];
-        let colorSequence = [];
-        let userSequence = [];
-        let gameInProgress = false;
-        let score = 0;
+<div class="game-container">
+  <h1>Memory</h1>
+  <button onclick="startGame()">Start Game</button>
+  <div id="gameBoard" style="display: none;"></div>
+  <p id="score">Score: 0</p>
+  <p id="gameOver" style="display: none;">Game Over! Your score is: <span id="finalScore"></span></p>
+</div>
 
-        function startGame() {
-            if (!gameInProgress) {
-                document.getElementById('play-button').style.display = 'none';
-                document.getElementById('game-over').innerHTML = '';
-                score = 0;
+<script>
+  let sequence = [];
+  let playerSequence = [];
+  let score = 0;
+  let gameStarted = false;
 
-                colorSequence = [];
-                userSequence = [];
-                gameInProgress = true;
+  function startGame() {
+    gameStarted = true;
+    score = 0;
+    sequence = [];
+    playerSequence = [];
+    document.getElementById('score').innerText = 'Score: ' + score;
+    document.getElementById('gameBoard').style.display = 'flex';
+    document.getElementById('gameOver').style.display = 'none';
+    generateSequence();
+    showSequence();
+  }
 
-                addColorToSequence();
-                playColorSequence();
-            }
-        }
+  function generateSequence() {
+    for (let i = 0; i < 4; i++) {
+      sequence.push(Math.floor(Math.random() * 4));
+    }
+  }
 
-        function addColorToSequence() {
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            colorSequence.push(randomColor);
-        }
+  function showSequence() {
+    let i = 0;
+    const intervalId = setInterval(() => {
+      highlightColor(sequence[i]);
+      i++;
+      if (i >= sequence.length) {
+        clearInterval(intervalId);
+        enableClick();
+      }
+    }, 1000);
+  }
 
-        function playColorSequence() {
-            let index = 0;
-            const interval = setInterval(() => {
-                showColor(colorSequence[index]);
-                index++;
-                if (index >= colorSequence.length) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        resetColorSquares();
-                        enableUserInput();
-                    }, 500);
-                }
-            }, 1000);
-        }
+  function highlightColor(colorIndex) {
+    const colors = ['red', 'green', 'blue', 'yellow'];
+    const colorBtn = document.getElementById('gameBoard');
+    colorBtn.innerHTML += `<div class="color-btn" style="background-color: ${colors[colorIndex]}" onclick="handleClick(${colorIndex})"></div>`;
+    setTimeout(() => {
+      colorBtn.innerHTML = '';
+    }, 500);
+  }
 
-        function showColor(color) {
-            const colorSquare = document.getElementById(color);
-            colorSquare.style.backgroundColor = color;
-            setTimeout(() => {
-                colorSquare.style.backgroundColor = 'grey';
-            }, 500);
-        }
+  function enableClick() {
+    playerSequence = [];
+    document.querySelectorAll('.color-btn').forEach(btn => btn.style.pointerEvents = 'auto');
+  }
 
-        function resetColorSquares() {
-            for (const color of colors) {
-                const colorSquare = document.getElementById(color.substr(1)); // remove '#' for element id
-                colorSquare.style.backgroundColor = 'grey';
-            }
-        }
+  function handleClick(colorIndex) {
+    if (!gameStarted) return;
+    playerSequence.push(colorIndex);
+    checkSequence();
+  }
 
-        function enableUserInput() {
-            userSequence = [];
-            document.getElementById('user-sequence').innerHTML = 'Your Turn';
-        }
+  function checkSequence() {
+    const lastIndex = playerSequence.length - 1;
+    if (playerSequence[lastIndex] !== sequence[lastIndex]) {
+      endGame();
+    } else if (playerSequence.length === sequence.length) {
+      score++;
+      document.getElementById('score').innerText = 'Score: ' + score;
+      disableClick();
+      setTimeout(() => {
+        generateSequence();
+        showSequence();
+      }, 1000);
+    }
+  }
 
-        function userClick(color) {
-            if (gameInProgress) {
-                showColor('#' + color);
-                userSequence.push(color);
+  function disableClick() {
+    document.querySelectorAll('.color-btn').forEach(btn => btn.style.pointerEvents = 'none');
+  }
 
-                if (!checkUserSequence()) {
-                    endGame();
-                } else if (userSequence.length === colorSequence.length) {
-                    score++;
-                    document.getElementById('user-sequence').innerHTML = `Score: ${score}`;
-                    setTimeout(() => {
-                        addColorToSequence();
-                        playColorSequence();
-                    }, 1000);
-                }
-            }
-        }
+  function endGame() {
+    gameStarted = false;
+    document.getElementById('gameBoard').style.display = 'none';
+    document.getElementById('gameOver').style.display = 'block';
+    document.getElementById('finalScore').innerText = score;
+  }
+</script>
 
-        function checkUserSequence() {
-            for (let i = 0; i < userSequence.length; i++) {
-                if (userSequence[i] !== colorSequence[i].substr(1)) { // remove '#' for comparison
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function endGame() {
-            document.getElementById('game-over').innerHTML = `Game Over! Your Score: ${score}`;
-            document.getElementById('play-button').style.display = 'block';
-            gameInProgress = false;
-        }
-    </script>
 </body>
 </html>
